@@ -8,4 +8,10 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls")),
     # Routes de l'API (a completer dans salles/urls.py)
     path("api/", include("salles.urls")),
+
+    path("api/salles/", include("salles.urls")),
+    path("api/salles/{id}", include("salles.urls")),
+    path("api/reservations/", include("reservations.urls")),
+    path("api/reservations/{id}", include("reservations.urls")),
+    path("api/salles/{id}/occupation/", include("reservations.urls")),
 ]

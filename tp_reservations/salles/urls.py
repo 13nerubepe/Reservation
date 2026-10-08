@@ -6,4 +6,10 @@ Les routes attendues sont (prefixe /api/ deja fourni par config/urls.py) :
   /api/salles/{id}/occupation/
 """
 # TODO : votre code ici
-urlpatterns = []
+router = DefaultRouter()
+# ENR
+router.register(r"salle",SalleViewset)
+router.register(r"reservations",ReservationViewset)
+
+urlpatterns = router.urls
+# urlpatterns = []
