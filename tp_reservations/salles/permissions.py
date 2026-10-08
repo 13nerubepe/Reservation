@@ -5,6 +5,7 @@ A FAIRE :
     reservee a l'auteur de la reservation (obj.utilisateur).
 """
 from rest_framework import permissions  # noqa: F401  (a utiliser)
+from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 # TODO : votre code ici
 class IsOwnerOrReadOnly(BasePermission):
@@ -14,3 +15,4 @@ class IsOwnerOrReadOnly(BasePermission):
             return True
 #             put, patch, delete
         return obj.utilisateur == request.user
+

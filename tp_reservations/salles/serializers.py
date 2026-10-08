@@ -14,21 +14,13 @@ from .models import Reservation, Salle  # noqa: F401  (a utiliser)
 
 # TODO : votre code ici
 
-Class ReservationViewSet(viewsets.ModelViewSet):
-    queryset = Salle.objects.all()
-    serializer_class = ReservationSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(utilisateur =self.request.user)
-
-
-Class SalleSerializer(serializers.ModelSerializer):
+class SalleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Salle
-        fields =["nom", "capacite", "batiment"]
+        fields = ["nom", "capacite", "batiment"]
 
 
-Class ReservationSerializer(serializers.ModelSerializer):
+class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
             model = Reservation
             fields =["salle", "utilisateur", "salle", "debut",
@@ -40,3 +32,38 @@ Class ReservationSerializer(serializers.ModelSerializer):
 #         creation
         if self.instance is None:
             salle = value.get("salle")
+
+#     pas compris
+    def validate(self, data):
+
+            debut = data.get("debut")
+            fin = data.get("fin")
+            salle = data.get("salle")
+
+            if debut and fin and fin <= debut:
+                raise serializers.ValidationError({
+                    "fin": "La fin doit être strictement après le début."
+                })
+
+            if salle and debut and fin:
+
+                reservations = Reservation.objects.filter(
+                    salle=salle,
+                    statut="CONFIRMEE",
+                    debut__lt=fin,
+                    fin__gt=debut,
+                )
+
+                # Lors d'une modification, on exclut la réservation
+                # actuellement modifiée.
+                if self.instance is not None:
+                    reservations = reservations.exclude(
+                        pk=self.instance.pk
+                    )
+
+                if reservations.exists():
+                    raise serializers.ValidationError({
+                        "non_field_errors": [
+                            "La salle est déjà réservée sur cette période."
+                        ]
+                    })

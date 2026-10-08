@@ -1,3 +1,9 @@
+from rest_framework.routers import DefaultRouter
+
+from rest_framework.routers import DefaultRouter
+from .views import SalleViewSet, ReservationViewSet
+
+
 """Tache 3 : brancher les ViewSets sur un DefaultRouter.
 
 Les routes attendues sont (prefixe /api/ deja fourni par config/urls.py) :
@@ -6,10 +12,9 @@ Les routes attendues sont (prefixe /api/ deja fourni par config/urls.py) :
   /api/salles/{id}/occupation/
 """
 # TODO : votre code ici
-router = DefaultRouter()
-# ENR
-router.register(r"salle",SalleViewset)
-router.register(r"reservations",ReservationViewset)
 
+router = DefaultRouter()
+
+router.register(r"salles", SalleViewSet, basename="salle")
+router.register( r"reservations",ReservationViewSet,basename="reservation")
 urlpatterns = router.urls
-# urlpatterns = []
